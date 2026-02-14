@@ -1,20 +1,19 @@
 import random
 wall = "#"
 path = " "
-def make_route(grid: list, x: int, y: int):
+DIRECTIONS = [(0, -2), (0, 2), (-2, 0), (2, 0)]
+def make_route(grid: list, x: int, y: int) -> None:
     grid[y][x] = path
-    print(grid)
+    directions = list(DIRECTIONS)
+    random.shuffle(directions)
+    # print(directions)
+    # print(grid)
 
 
 def init_grid(width: int, height: int) -> list:
     grid = []
-    for i in range(height):
+    for _ in range(height):
         grid.append([wall] * width)
-    # if check_valid(width, height, grid) == True:
-    #     result = make_route(grid, width, height)
-    # else:
-    #     result = grid.clear()
-    print(len(grid[0]))
     return grid
 
 def check_valid(x: int, y: int, grid: list) -> bool:
@@ -23,5 +22,3 @@ def check_valid(x: int, y: int, grid: list) -> bool:
     if grid[y][x] != wall:
         return False
     return True
-
-print(check_valid(5, 4, init_grid(4, 5)))
