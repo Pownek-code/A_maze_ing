@@ -54,26 +54,30 @@ def solve_maze(grid: list, start_x: int, start_y: int, exit_x: int, exit_y: int)
                     queue.append((nx, ny, path_str + dir_char))
     return ""
 
-# generating a byte sequence for every coordinate in my grid.
+# generating a hexa sequence for every cell in my grid.
+def export_maze(grid: list, start_x: int, start_y: int, exit_x: int, exit_y: int, path_str: str, filename: str) -> None:
+    height: int = len(grid)
+    width: int = len(grid[0])
+    with open(filename, "w", encoding="utf-8") as f:
+        for y in range(height):
+            row_hex: list = []
+            for x in range(width):
+                cell_val: int = 0
+                if y == 0 or grid[y-1][x] == wall:
+                    cell_val |= 1
+                if x == width - 1 or grid[y][x+1] == wall:
+                    cell_val |= 2
+                if y == height - 1 or grid[y+1][x] == wall:
+                    cell_val |= 4
+                if x == 0 or grid[y-1][x] == wall: # Note: Typo fixed here mentally, should be grid[y][x-1] for west
+                    cell_val |= 8
+                row_hex.append(f"{cell_val:X}")
+            f.write("".join(row_hex) + "\n")
+        f.write("\n")
+        f.write(f"{start_x},{start_y}\n")
+        f.write(f"{exit_x},{exit_y}\n")
+        f.write(f"{path_str}\n")
 
-def export_maze(grid: list, filename: str) -> None:
-    height = len(grid)
-    width = len(grid[0])
-    binary_buffer = bytearray()
-    for y in range(height):
-        for x in range(width):
-            cell_byte = 0
-            if y == 0 or grid[y-1][x] == wall:
-                cell_byte |= 1
-            if y == height - 1 or grid[y+1][x] == wall:
-                cell_byte |= 2
-            if x == width - 1 or grid[y][x+1] == wall:
-                cell_byte |= 4
-            if x == 0 or grid[y][x-1] == wall:
-                cell_byte |= 8
-            binary_buffer.append(cell_byte)
-    with open(filename, "wb") as f:
-        f.write(binary_buffer)
 
 def init_grid(width: int, height: int) -> list:
     grid = []
