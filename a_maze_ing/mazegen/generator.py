@@ -6,8 +6,21 @@ def make_route(grid: list, x: int, y: int) -> None:
     grid[y][x] = path
     directions = list(DIRECTIONS)
     random.shuffle(directions)
-    # print(directions)
-    # print(grid)
+    for dx, dy in directions:
+        nx = dx + x
+        ny = dy + y
+        if check_valid(nx, ny, grid):
+            mid_x = x + dx // 2
+            mid_y = y + dy // 2
+            grid[mid_y][mid_x] = path
+            make_route(grid, nx, ny)
+
+def generate_maze(width: int, height: int) -> list:
+    grid = init_grid(width, height)
+    # TODO: Inject 42 Stencil
+    make_route(grid, 0, 0)
+    return grid
+
 
 
 def init_grid(width: int, height: int) -> list:
