@@ -18,7 +18,20 @@ def make_route(grid: list, x: int, y: int) -> None:
 def generate_maze(width: int, height: int) -> list:
     grid = init_grid(width, height)
     # TODO: Inject 42 Stencil
-    make_route(grid, 0, 0)
+    if width < 9 or height < 7:
+        print("Error: Maze dimensions too small to inject the '42' pattern.")
+    else:
+        forty_two = [
+            (0,0), (2,0), (0,1), (2,1), (0,2), (1,2), (2,2), (2,3), (2,4),
+            (4,0), (5,0), (6,0), (6,1), (4,2), (5,2), (6,2), (4,3), (4,4), (5,4), (6,4)
+        ]
+        start_x = (width - 7) // 2
+        start_y = (height - 5) // 2
+        for dx, dy in forty_two:
+            target_x = start_x + dx
+            target_y = start_y + dy
+            grid[target_y][target_x] = "42"
+    make_route(grid, 1, 1)
     return grid
 
 
