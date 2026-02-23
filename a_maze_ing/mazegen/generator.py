@@ -17,7 +17,7 @@ def make_route(grid: list, x: int, y: int) -> None:
 
 def generate_maze(width: int, height: int) -> list:
     grid: list = init_grid(width, height)
-    # TODO: Inject 42 Stencil
+    # this is used to Inject 42 patern!
     if width < 9 or height < 7:
         print("Error: Maze dimensions too small to inject the '42' pattern.")
     else:
@@ -39,7 +39,7 @@ def generate_maze(width: int, height: int) -> list:
 def solve_maze(grid: list, start_x: int, start_y: int, exit_x: int, exit_y: int) -> str:
     queue = [(start_x, start_y, "")]
     visited = set()
-    visited.add(start_x, start_y)
+    visited.add((start_x, start_y))
     moves = [((0, -1), "N"), ((0, 1), "S"), ((-1, 0), "W"), ((1, 0), "E")]
     while queue:
         curr_x, curr_y, path_str = queue.pop(0)
@@ -50,11 +50,30 @@ def solve_maze(grid: list, start_x: int, start_y: int, exit_x: int, exit_y: int)
             ny = curr_y + dir_y
             if 0 <= ny < len(grid) and 0 <= nx < len(grid[0]):
                 if grid[ny][nx] == path and (nx, ny) not in visited:
-                    visited.add(nx, ny)
+                    visited.add((nx, ny))
                     queue.append((nx, ny, path_str + dir_char))
     return ""
 
+# generating a byte sequence for every coordinate in my grid.
 
+def export_maze(grid: list, filename: str) -> None:
+    height = len(grid)
+    width = len(grid[0])
+    binary_buffer = bytearray()
+    for y in range(height):
+        for x in range(width):
+            cell_byte = 0
+            if y == 0 or grid[y-1][x] == wall:
+                cell_byte |= 1
+            if y == height - 1 or grid[y+1][x] == wall:
+                cell_byte |= 2
+            if x == width - 1 or grid[y][x+1] == wall:
+                cell_byte |= 4
+            if x == 0 or grid[y][x-1] == wall:
+                cell_byte |= 8
+            binary_buffer.append(cell_byte)
+    with open(filename, "wb") as f:
+        f.write(binary_buffer)
 
 def init_grid(width: int, height: int) -> list:
     grid = []
