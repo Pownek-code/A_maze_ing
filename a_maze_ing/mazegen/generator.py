@@ -32,6 +32,10 @@ def generate_maze(width: int, height: int) -> list:
             target_y: int = start_y + dy
             grid[target_y][target_x] = "42"
     make_route(grid, 1, 1)
+    for r in range(height):
+        for c in range(width):
+            if grid[r][c] == "42":
+                grid[r][c] = wall
     return grid
 
 # Breadth-First Search (BFS) algorithm.
@@ -69,7 +73,7 @@ def export_maze(grid: list, start_x: int, start_y: int, exit_x: int, exit_y: int
                     cell_val |= 2
                 if y == height - 1 or grid[y+1][x] == wall:
                     cell_val |= 4
-                if x == 0 or grid[y-1][x] == wall: # Note: Typo fixed here mentally, should be grid[y][x-1] for west
+                if x == 0 or grid[y][x - 1] == wall: # Note: Typo fixed here mentally, should be grid[y][x-1] for west
                     cell_val |= 8
                 row_hex.append(f"{cell_val:X}")
             f.write("".join(row_hex) + "\n")
