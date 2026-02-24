@@ -6,12 +6,14 @@ class MazeGenerator:
     DIRECTIONS = [(0, -2), (0, 2), (-2, 0), (2, 0)]
     SOLVER_MOVES = [((0, -1), "N"), ((0, 1), "S"), ((-1, 0), "W"), ((1, 0), "E")]
 
-    def __init__(self, width: int, height: int):
-        self.width = width
-        self.height = height
+    def __init__(self, config: dict):
+        self.width = config["WIDTH"]
+        self.height = config["HEIGHT"]
+        self.is_perfect = config.get("PERFECT", True)
         self.wall = "#"
         self.path = " "
         self.grid = self._init_grid()
+        seed = config.get("SEED")
         self.rng = random.Random(seed) if seed is not None else random.Random()
 
     def _init_grid(self) -> list:

@@ -9,7 +9,7 @@ def main() -> None:
     config_path: str = sys.argv[1]
     config: dict = parse_config(config_path)
     print("Initializing Maze Generator...")
-    maze: MazeGenerator = MazeGenerator(config["WIDTH"], config["HEIGHT"])
+    maze: MazeGenerator = MazeGenerator(config)
     print("Carving the spanning tree...")
     maze.generate_maze()
     start_x, start_y = config["ENTRY"]
