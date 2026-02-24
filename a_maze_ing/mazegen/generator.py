@@ -12,6 +12,7 @@ class MazeGenerator:
         self.wall = "#"
         self.path = " "
         self.grid = self._init_grid()
+        self.rng = random.Random(seed) if seed is not None else random.Random()
 
     def _init_grid(self) -> list:
         grid = []
@@ -29,7 +30,7 @@ class MazeGenerator:
     def _make_route(self, x: int, y: int) -> None:
         self.grid[y][x] = self.path
         directions = list(self.DIRECTIONS)
-        random.shuffle(directions)
+        self.rng.shuffle(directions)
         
         for dx, dy in directions:
             nx = dx + x
