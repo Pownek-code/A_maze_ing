@@ -62,6 +62,8 @@ class MazeGenerator:
             for c in range(self.width):
                 if self.grid[r][c] == "42":
                     self.grid[r][c] = self.wall
+        if not self.is_perfect:
+            self._break_walls_for_imperfect()
         return self.grid
 
     def solve_maze(self, start_x: int, start_y: int, exit_x: int, exit_y: int) -> str:
@@ -103,3 +105,22 @@ class MazeGenerator:
             f.write(f"{start_x},{start_y}\n")
             f.write(f"{exit_x},{exit_y}\n")
             f.write(f"{path_str}\n")
+    
+    def _break_walls_for_imperfect(self) -> None:
+        eligible_walls = []
+        for y in range(1, self.height - 1):
+            for x in range(1, self.width - 1):
+                if self.grid[y][x] == self.wall:
+                    if self.grid[y][x-1] == self.path and self.grid[y][x+1] == self.path:
+                        if self.grid[y-1][x] == self.wall and self.grid[y+1][x] == self.wall:
+                            eligible_walls.append((x, y))
+                    elif self.grid[y-1][x] == self.path and self.grid[y+1][x] == self.path:
+                        if self.grid[y][x-1] == self.wall and self.grid[y][x+1] == self.wall:
+                            eligible_walls.append((x, y))
+        if not eligible_walls:
+            return
+        num_to_break = max(1, len(eligible_walls) // 20)
+        walls_to_break = self.rng.sample(eligible_walls, min(num_to_break, len(eligible_walls)))
+        
+        for x, y in walls_to_break:
+            self.grid[y][x] = self.path
